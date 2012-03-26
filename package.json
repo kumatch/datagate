@@ -1,0 +1,25 @@
+{
+  "author": "Yosuke Kumakura <kumatch@gmail.com>",
+  "name": "datagate",
+  "version": "0.0.0",
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kumatch/node-datagate.git"
+  },
+  "scripts": {
+    "test": "./test/testrunner"
+  },
+  "dependencies": {
+    "underscore": "*",
+    "async": "*"
+  },
+  "devDependencies": {
+    "mocha": '*',
+    "should": "*"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
