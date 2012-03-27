@@ -6,7 +6,7 @@ describe('Datagate object', function() {
         var gate;
 
         before(function (done) {
-            gate = datagate.object({});
+            gate = datagate.object();
             done();
         });
 
@@ -126,19 +126,23 @@ describe('Datagate object', function() {
                 output.bar.should.equal(value.bar);
                 output.should.not.have.property('baz');
 
-                err.bar.should.throw;
-                err.bar.name.should.equal('DatagateVariableError');
-                err.bar.message.should.equal(bar_message);
-                err.bar.origin.should.equal(value.bar);
-                err.bar.result.should.equal(value.bar);
+                err.should.throw;
+                err.name.should.equal('DatagateObjectError');
+                err.message.should.equal('Invalid object value.');
+                err.origin.should.equal(value);
+                err.result.should.equal(output);
 
-                err.should.not.have.property('foo');
-                err.should.not.have.property('baz');
+                err.errors.bar.name.should.equal('DatagateVariableError');
+                err.errors.bar.message.should.equal(bar_message);
+                err.errors.bar.origin.should.equal(value.bar);
+                err.errors.bar.result.should.equal(value.bar);
+
+                err.errors.should.not.have.property('foo');
+                err.errors.should.not.have.property('baz');
 
                 done();
             });
         });
-
 
         it('{foo:123, bar:456, baz:789} を与えると {foo:123, bar:456} と共に foo に対するエラーを得る', function (done) {
             var value = {
@@ -152,11 +156,16 @@ describe('Datagate object', function() {
                 output.bar.should.equal(value.bar);
                 output.should.not.have.property('baz');
 
-                err.foo.should.throw;
-                err.foo.name.should.equal('DatagateVariableError');
-                err.foo.message.should.equal(foo_message);
-                err.foo.origin.should.equal(value.foo);
-                err.foo.result.should.equal(value.foo);
+                err.should.throw;
+                err.name.should.equal('DatagateObjectError');
+                err.message.should.equal('Invalid object value.');
+                err.origin.should.equal(value);
+                err.result.should.equal(output);
+
+                err.errors.foo.name.should.equal('DatagateVariableError');
+                err.errors.foo.message.should.equal(foo_message);
+                err.errors.foo.origin.should.equal(value.foo);
+                err.errors.foo.result.should.equal(value.foo);
 
                 err.should.not.have.property('bar');
                 err.should.not.have.property('baz');
@@ -167,39 +176,32 @@ describe('Datagate object', function() {
     });
 
 
-    describe('one string, some integers, child object datagate', function() {
+    describe('child object datagate', function() {
         var gate;
         var filter = datagate.filter;
         var validator = datagate.validator;
 
+        var object_message = 'object message';
+        var child_object_message = 'child object message';
+        var array_message = 'array message';
         var string_message = 'string message';
         var integers_message = 'integers message';
-        var child_string_message = 'child string message';
-        var child_integers_message = 'child integers message';
 
         before(function (done) {
             gate = datagate.object({
-                string: datagate([
-                    filter.toLowerCase,
-                    validator.isAlphabet
-                ], string_message),
-
-                integers: datagate.array([
-                    [validator.isInteger, integers_message]
-                ]),
-
                 child: datagate.object({
                     string: datagate([
                         filter.toLowerCase,
-                        [validator.isAlphabet, child_string_message]
+                        [validator.isAlphabet, string_message]
                     ]),
 
-                    integers: datagate.array([
-                        validator.isInteger
-                    ], child_integers_message)
-                })
-            });
-
+                    integers: datagate.array(
+                        datagate([
+                            validator.isInteger
+                        ], integers_message), array_message
+                    )
+                }, child_object_message)
+            }, object_message);
 
             done();
         });
@@ -207,26 +209,19 @@ describe('Datagate object', function() {
         it('valid なデータを与えると filter 結果後の値を得る', function (done) {
 
             var value = {
-                string: 'FOO',
-                integers: [10, 20, 30],
                 child: {
-                    string: 'BAR',
-                    integers: [40, 50]
+                    string: 'FOO',
+                    integers: [123, 456]
                 }
             };
 
             gate(value, function (err, output) {
                 (!err).should.ok;
 
-                output.string.should.equal('foo');
-                output.integers.length.should.equal(3);
-                output.integers[0].should.equal(10);
-                output.integers[1].should.equal(20);
-                output.integers[2].should.equal(30);
-                output.child.string.should.equal('bar');
+                output.child.string.should.equal('foo');
                 output.child.integers.length.should.equal(2);
-                output.child.integers[0].should.equal(40);
-                output.child.integers[1].should.equal(50);
+                output.child.integers[0].should.equal(123);
+                output.child.integers[1].should.equal(456);
 
                 done();
             });
@@ -236,53 +231,39 @@ describe('Datagate object', function() {
         it('invalid なデータを与えると filter 結果後の値およびエラーを得る', function (done) {
 
             var value = {
-                string: 123,
-                integers: ['foo', 'bar', 456],
                 child: {
-                    string: 789,
-                    integers: 'baz'
+                    string: 12345,
+                    integers: ['bar', 'baz']
                 }
             };
 
             gate(value, function (err, output) {
+                output.child.string.should.equal('12345');
+                output.child.integers[0].should.equal('bar');
+                output.child.integers[1].should.equal('baz');
 
-                output.string.should.equal('123');
-                output.integers.length.should.equal(3);
-                output.integers[0].should.equal('foo');
-                output.integers[1].should.equal('bar');
-                output.integers[2].should.equal(456);
-                output.child.string.should.equal('789');
-                output.child.integers.should.equal('baz');
+                err.should.throw;
+                err.name.should.equal('DatagateObjectError');
+                err.message.should.equal(object_message);
+                err.origin.should.equal(value);
+                err.result.should.equal(output);
 
-                err.string.should.throw;
-                err.string.name.should.equal('DatagateVariableError');
-                err.string.message.should.equal(string_message);
-                err.string.origin.should.equal(123);
-                err.string.result.should.equal('123');
+                err.errors.child.name.should.equal('DatagateObjectError');
+                err.errors.child.message.should.equal(child_object_message);
+                err.errors.child.origin.should.equal(value.child);
+                err.errors.child.result.should.equal(output.child);
 
-                err.integers.should.throw;
-                err.integers.name.should.equal('DatagateVariableError');
-                err.integers.message.length.should.equal(2);
-                err.integers.message[0].should.equal(integers_message);
-                err.integers.message[0].should.equal(integers_message);
-                err.integers.origin[0].should.equal('foo');
-                err.integers.origin[1].should.equal('bar');
-                err.integers.origin[2].should.equal(456);
-                err.integers.result[0].should.equal('foo');
-                err.integers.result[1].should.equal('bar');
-                err.integers.result[2].should.equal(456);
+                err.errors.child.errors.string.name.should.equal('DatagateVariableError');
+                err.errors.child.errors.string.message.should.equal(string_message);
+                err.errors.child.errors.string.origin.should.equal(12345);
+                err.errors.child.errors.string.result.should.equal('12345');
 
-                err.child.string.should.throw;
-                err.child.string.name.should.equal('DatagateVariableError');
-                err.child.string.message.should.equal(child_string_message);
-                err.child.string.origin.should.equal(789);
-                err.child.string.result.should.equal('789');
-
-                err.child.integers.should.throw;
-                err.child.integers.name.should.equal('DatagateVariableError');
-                err.child.integers.message.should.not.equal(child_integers_message);
-                err.child.integers.origin.should.equal('baz');
-                err.child.integers.result.should.equal('baz');
+                err.errors.child.errors.integers.name.should.equal('DatagateArrayError');
+                err.errors.child.errors.integers.message.should.equal(array_message);
+                err.errors.child.errors.integers.origin[0].should.equal('bar');
+                err.errors.child.errors.integers.origin[1].should.equal('baz');
+                err.errors.child.errors.integers.result[0].should.equal('bar');
+                err.errors.child.errors.integers.result[1].should.equal('baz');
 
                 done();
             });
