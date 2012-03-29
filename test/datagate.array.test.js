@@ -175,7 +175,7 @@ describe('Datagate array', function() {
             });
         });
 
-        it('[ ["FOO", 123], "BAZ" ] を与えると [ ["foo", "123"], "BAZ" ] と共にエラーを得る', function (done) {
+        it('[ ["FOO", 123], "BAZ" ] を与えると [ ["foo", 123], "BAZ" ] と共にエラーを得る', function (done) {
             var value = [
                 ["FOO", 123],
                 "BAZ"
@@ -186,7 +186,7 @@ describe('Datagate array', function() {
 
                 output[0].length.should.equal(2);
                 output[0][0].should.equal('foo');
-                output[0][1].should.equal('123');
+                output[0][1].should.equal(123);
 
                 output[1].should.equal('BAZ');
 
@@ -201,7 +201,7 @@ describe('Datagate array', function() {
 
                 err.result.length.should.equal(2);
                 err.result[0][0].should.equal('foo');
-                err.result[0][1].should.equal('123');
+                err.result[0][1].should.equal(123);
                 err.result[1].should.equal('BAZ');
 
                 err.errors.length.should.equal(2);
@@ -212,13 +212,13 @@ describe('Datagate array', function() {
                 err.errors[0].origin[1].should.equal(123);
                 err.errors[0].result.length.should.equal(2);
                 err.errors[0].result[0].should.equal('foo');
-                err.errors[0].result[1].should.equal('123');
+                err.errors[0].result[1].should.equal(123);
 
                 err.errors[0].errors.length.should.equal(1);
                 err.errors[0].errors[0].name.should.equal('DatagateVariableError');
                 err.errors[0].errors[0].message.should.equal('Invalid value / origin: 123, result: 123');
                 err.errors[0].errors[0].origin.should.equal(123);
-                err.errors[0].errors[0].result.should.equal('123');
+                err.errors[0].errors[0].result.should.equal(123);
 
 
                 err.errors[1].name.should.equal('DatagateArrayError');

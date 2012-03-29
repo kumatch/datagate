@@ -238,7 +238,7 @@ describe('Datagate object', function() {
             };
 
             gate(value, function (err, output) {
-                output.child.string.should.equal('12345');
+                output.child.string.should.equal(12345);
                 output.child.integers[0].should.equal('bar');
                 output.child.integers[1].should.equal('baz');
 
@@ -256,7 +256,7 @@ describe('Datagate object', function() {
                 err.errors.child.errors.string.name.should.equal('DatagateVariableError');
                 err.errors.child.errors.string.message.should.equal(string_message);
                 err.errors.child.errors.string.origin.should.equal(12345);
-                err.errors.child.errors.string.result.should.equal('12345');
+                err.errors.child.errors.string.result.should.equal(12345);
 
                 err.errors.child.errors.integers.name.should.equal('DatagateArrayError');
                 err.errors.child.errors.integers.message.should.equal(array_message);
