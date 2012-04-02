@@ -1,3 +1,9 @@
-type
-  array から
 
+format
+  email
+  url (uri)
+  ip-address (ipv4)
+  ipv6
+  date
+  time
+  date-time
