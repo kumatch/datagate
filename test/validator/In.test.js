@@ -21,7 +21,6 @@ describe('isIn [foo, 123, true ] validator', function() {
 describe('notIn (foo, 123, true]) validator', function() {
 
     var notIn = validator.notIn(['foo', 123, true]);
-    console.log(notIn);
 
     valids.forEach(function (val) {
         invalidCheck(notIn, val);

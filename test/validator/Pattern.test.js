@@ -23,7 +23,6 @@ describe('isPattern /^[a-f0-9]+$/ validator', function() {
 describe('notPattern (foo, 123, true]) validator', function() {
 
     var notPattern = validator.notPattern(pattern);
-    console.log(notPattern);
 
     valids.forEach(function (val) {
         invalidCheck(notPattern, val);
