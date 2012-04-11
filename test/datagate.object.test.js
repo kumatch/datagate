@@ -23,6 +23,7 @@ describe('Datagate object', function() {
                 err.should.throw;
                 _.isObject(output).should.ok;
                 _.isEmpty(output).should.ok;
+
                 done();
             });
         });
@@ -153,6 +154,12 @@ describe('Datagate object', function() {
                 (output.foo === undefined).should.ok;
                 (output.bar === undefined).should.ok;
 
+                err.properties.foo.should.throw;
+                err.properties.bar.should.throw;
+
+                err.properties_message.should.ownProperty('foo');
+                err.properties_message.should.ownProperty('bar');
+
                 done();
             });
         });
@@ -168,6 +175,12 @@ describe('Datagate object', function() {
 
                 (output.foo === undefined).should.ok;
                 (output.bar === undefined).should.ok;
+
+                err.properties.foo.should.throw;
+                err.properties.bar.should.throw;
+
+                err.properties_message.should.ownProperty('foo');
+                err.properties_message.should.ownProperty('bar');
 
                 done();
             });
@@ -210,13 +223,17 @@ describe('Datagate object', function() {
                 err.origin.should.equal(value);
                 err.result.should.equal(output);
 
-                err.errors.bar.name.should.equal('DatagateVariableError');
-                err.errors.bar.message.should.equal(bar_message);
-                err.errors.bar.origin.should.equal(value.bar);
-                err.errors.bar.result.should.equal(value.bar);
+                err.properties.bar.name.should.equal('DatagateVariableError');
+                err.properties.bar.message.should.equal(bar_message);
+                err.properties.bar.origin.should.equal(value.bar);
+                err.properties.bar.result.should.equal(value.bar);
 
-                err.errors.should.not.have.property('foo');
-                err.errors.should.not.have.property('baz');
+                err.properties.should.not.have.property('foo');
+                err.properties.should.not.have.property('baz');
+
+                err.properties_message.should.ownProperty('bar');
+                err.properties_message.should.not.have.property('foo');
+                err.properties_message.should.not.have.property('baz');
 
                 done();
             });
@@ -240,13 +257,17 @@ describe('Datagate object', function() {
                 err.origin.should.equal(value);
                 err.result.should.equal(output);
 
-                err.errors.foo.name.should.equal('DatagateVariableError');
-                err.errors.foo.message.should.equal(foo_message);
-                err.errors.foo.origin.should.equal(value.foo);
-                err.errors.foo.result.should.equal(value.foo);
+                err.properties.foo.name.should.equal('DatagateVariableError');
+                err.properties.foo.message.should.equal(foo_message);
+                err.properties.foo.origin.should.equal(value.foo);
+                err.properties.foo.result.should.equal(value.foo);
 
-                err.should.not.have.property('bar');
-                err.should.not.have.property('baz');
+                err.properties.should.not.have.property('bar');
+                err.properties.should.not.have.property('baz');
+
+                err.properties_message.should.ownProperty('foo');
+                err.properties_message.should.not.have.property('bar');
+                err.properties_message.should.not.have.property('baz');
 
                 done();
             });
@@ -326,22 +347,28 @@ describe('Datagate object', function() {
                 err.origin.should.equal(value);
                 err.result.should.equal(output);
 
-                err.errors.child.name.should.equal('DatagateObjectError');
-                err.errors.child.message.should.equal(child_object_message);
-                err.errors.child.origin.should.equal(value.child);
-                err.errors.child.result.should.equal(output.child);
+                err.properties.child.name.should.equal('DatagateObjectError');
+                err.properties.child.message.should.equal(child_object_message);
+                err.properties.child.origin.should.equal(value.child);
+                err.properties.child.result.should.equal(output.child);
 
-                err.errors.child.errors.string.name.should.equal('DatagateVariableError');
-                err.errors.child.errors.string.message.should.equal(string_message);
-                err.errors.child.errors.string.origin.should.equal(12345);
-                err.errors.child.errors.string.result.should.equal(12345);
+                err.properties.child.properties.string.name.should.equal('DatagateVariableError');
+                err.properties.child.properties.string.message.should.equal(string_message);
+                err.properties.child.properties.string.origin.should.equal(12345);
+                err.properties.child.properties.string.result.should.equal(12345);
 
-                err.errors.child.errors.integers.name.should.equal('DatagateArrayError');
-                err.errors.child.errors.integers.message.should.equal(array_message);
-                err.errors.child.errors.integers.origin[0].should.equal('bar');
-                err.errors.child.errors.integers.origin[1].should.equal('baz');
-                err.errors.child.errors.integers.result[0].should.equal('bar');
-                err.errors.child.errors.integers.result[1].should.equal('baz');
+                err.properties.child.properties.integers.name.should.equal('DatagateArrayError');
+                err.properties.child.properties.integers.message.should.equal(array_message);
+                err.properties.child.properties.integers.origin[0].should.equal('bar');
+                err.properties.child.properties.integers.origin[1].should.equal('baz');
+                err.properties.child.properties.integers.result[0].should.equal('bar');
+                err.properties.child.properties.integers.result[1].should.equal('baz');
+
+                err.properties_message.should.ownProperty('child');
+                err.properties_message.child.string.should.equal(string_message);
+                err.properties_message.child.integers.length.should.equal(2);
+                err.properties_message.child.integers[0].should.equal(integers_message);
+                err.properties_message.child.integers[1].should.equal(integers_message);
 
                 done();
             });
