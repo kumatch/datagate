@@ -1,4 +1,5 @@
 var datagate = require('../');
+var _ = require('underscore');
 
 describe('Datagate array', function() {
 
@@ -15,17 +16,31 @@ describe('Datagate array', function() {
             done();
         });
 
-        it('非 Array を通すとエラーを得る', function (done) {
+        it('非 Array を通すとエラーが発生して空 Array を得る', function (done) {
             var value = 123;
 
             gate(value, function (err, output) {
-                output.should.equal(value);
                 err.should.throw;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
                 done();
             });
         });
 
-        it('[1, 2, 3] を通すと同じ値を得る', function (done) {
+        it('空 Array を通すとエラーは発生せずに空 Array を得る', function (done) {
+            var value = [];
+
+            gate(value, function (err, output) {
+                (err === null).should.ok;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
+                done();
+            });
+        });
+
+        it('[1, 2, 3] を通すとエラーは発生せずに [1, 2, 3] を得る', function (done) {
             var value = [1, 2, 3];
 
             gate(value, function (err, output) {
@@ -53,6 +68,30 @@ describe('Datagate array', function() {
                 ])
             );
             done();
+        });
+
+        it('非 Array を通すとエラーが発生して空 Array を得る', function (done) {
+            var value = 123;
+
+            gate(value, function (err, output) {
+                err.should.throw;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
+                done();
+            });
+        });
+
+        it('空 Array を通すとエラーは発生せずに空 Array を得る', function (done) {
+            var value = [];
+
+            gate(value, function (err, output) {
+                (err === null).should.ok;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
+                done();
+            });
         });
 
         it('["FOO", "Bar", "baz"] を与えると ["faa", "bar", "baz"] を得る', function (done) {
@@ -85,6 +124,30 @@ describe('Datagate array', function() {
                 ])
             );
             done();
+        });
+
+        it('非 Array を通すとエラーが発生して空 Array を得る', function (done) {
+            var value = 123;
+
+            gate(value, function (err, output) {
+                err.should.throw;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
+                done();
+            });
+        });
+
+        it('空 Array を通すとエラーは発生せずに空 Array を得る', function (done) {
+            var value = [];
+
+            gate(value, function (err, output) {
+                (err === null).should.ok;
+                _.isArray(output).should.ok;
+                output.length.should.equal(0);
+
+                done();
+            });
         });
 
         it('["FOO", "Bar", "baz"] を与えると ["foo", "bar", "baz"] を得る', function (done) {
@@ -175,7 +238,7 @@ describe('Datagate array', function() {
             });
         });
 
-        it('[ ["FOO", 123], "BAZ" ] を与えると [ ["foo", 123], "BAZ" ] と共にエラーを得る', function (done) {
+        it('[ ["FOO", 123], "BAZ" ] を与えると [ ["foo", 123], [] ] と共にエラーを得る', function (done) {
             var value = [
                 ["FOO", 123],
                 "BAZ"
@@ -188,7 +251,8 @@ describe('Datagate array', function() {
                 output[0][0].should.equal('foo');
                 output[0][1].should.equal(123);
 
-                output[1].should.equal('BAZ');
+                _.isArray(output[1]).should.ok;
+                output[1].length.should.equal(0);
 
                 err.should.throw;
                 err.name.should.equal('DatagateArrayError');
@@ -202,7 +266,9 @@ describe('Datagate array', function() {
                 err.result.length.should.equal(2);
                 err.result[0][0].should.equal('foo');
                 err.result[0][1].should.equal(123);
-                err.result[1].should.equal('BAZ');
+
+                _.isArray(err.result[1]).should.ok;
+                err.result[1].length.should.equal(0);
 
                 err.errors.length.should.equal(2);
                 err.errors[0].name.should.equal('DatagateArrayError');
@@ -222,9 +288,10 @@ describe('Datagate array', function() {
 
 
                 err.errors[1].name.should.equal('DatagateArrayError');
-                err.errors[1].message.should.equal('Value must be array.');
+                err.errors[1].message.should.equal('Invalid value in array.');
                 err.errors[1].origin.should.equal('BAZ');
-                err.errors[1].result.should.equal('BAZ');
+                _.isArray(err.errors[1].result).should.ok;
+                err.errors[1].result.length.should.equal(0);
 
                 done();
             });

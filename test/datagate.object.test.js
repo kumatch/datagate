@@ -1,4 +1,5 @@
 var datagate = require('../');
+var _ = require('underscore');
 
 describe('Datagate object', function() {
 
@@ -15,27 +16,38 @@ describe('Datagate object', function() {
             done();
         });
 
-        it('非 Object を通すとエラーを得る', function (done) {
+        it('非オブジェクトを通すとエラーが発生して空オブジェクトを得る', function (done) {
             var value = 123;
 
             gate(value, function (err, output) {
                 err.should.throw;
+                _.isObject(output).should.ok;
+                _.isEmpty(output).should.ok;
                 done();
             });
         });
 
-        it('{foo:123, bar:456} を通すと空オブジェクトを得る', function (done) {
+        it('空オブジェクトを通すとエラーは発生せずに空オブジェクトを得る', function (done) {
+            var value = {};
+
+            gate(value, function (err, output) {
+                (err === null).should.ok;
+                _.isObject(output).should.ok;
+                _.isEmpty(output).should.ok;
+                done();
+            });
+        });
+
+        it('{foo:123, bar:456} を通すとエラーは発生せずに空オブジェクトを得る', function (done) {
             var value = {
                 foo: 123,
                 bar: 456
             };
 
             gate(value, function (err, output) {
-                (!err).should.ok;
-
-                output.should.not.have.property('foo');
-                output.should.not.have.property('bar');
-
+                (err === null).should.ok;
+                _.isObject(output).should.ok;
+                _.isEmpty(output).should.ok;
                 done();
             });
         });
@@ -59,7 +71,40 @@ describe('Datagate object', function() {
             done();
         });
 
-        it('{foo:FOO, bar:BAR, baz:BAZ} を与えると {foo:foo, bar:BOR} を得る', function (done) {
+        it('非オブジェクトを与えるとエラーが発生して {foo: undefined, bar: undefined} を得る', function (done) {
+            var value = 123;
+
+            gate(value, function (err, output) {
+                err.should.throw;
+
+                output.should.ownProperty('foo');
+                output.should.ownProperty('bar');
+
+                (output.foo === undefined).should.ok;
+                (output.bar === undefined).should.ok;
+
+                done();
+            });
+        });
+
+        it('空オブジェクトを与えるとエラーは発生せず {foo: undefined, bar: undefined} を得る', function (done) {
+            var value = {};
+
+            gate(value, function (err, output) {
+                (err === null).should.ok;
+
+                output.should.ownProperty('foo');
+                output.should.ownProperty('bar');
+
+                (output.foo === undefined).should.ok;
+                (output.bar === undefined).should.ok;
+
+                done();
+            });
+        });
+
+
+        it('{foo:FOO, bar:BAR, baz:BAZ} を与えるとエラーは発生せず {foo:foo, bar:BOR} を得る', function (done) {
             var value = {
                 foo: 'FOO',
                 bar: 'BAR',
@@ -95,6 +140,39 @@ describe('Datagate object', function() {
             });
             done();
         });
+
+        it('非オブジェクトを与えるとエラーが発生して {foo: undefined, bar: undefined} を得る', function (done) {
+            var value = 123;
+
+            gate(value, function (err, output) {
+                err.should.throw;
+
+                output.should.ownProperty('foo');
+                output.should.ownProperty('bar');
+
+                (output.foo === undefined).should.ok;
+                (output.bar === undefined).should.ok;
+
+                done();
+            });
+        });
+
+        it('空オブジェクトを与えるとエラーが発生して {foo: undefined, bar: undefined} を得る', function (done) {
+            var value = {};
+
+            gate(value, function (err, output) {
+                err.should.throw;
+
+                output.should.ownProperty('foo');
+                output.should.ownProperty('bar');
+
+                (output.foo === undefined).should.ok;
+                (output.bar === undefined).should.ok;
+
+                done();
+            });
+        });
+
 
         it('{foo:foo, bar:123, baz:baz} を与えると {foo:foo, bar:123} を得る', function (done) {
             var value = {
