@@ -1,4 +1,4 @@
-var filter = require('../../lib/filter');
+var filter = require('../../src/filter');
 var filterCheck = require('./filter_check');
 
 describe('toNumberType filter', function() {

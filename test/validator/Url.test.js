@@ -1,4 +1,4 @@
-var validator = require('../../lib/validator');
+var validator = require('../../src/validator');
 var validCheck = require('./validator_check').valid;
 var invalidCheck = require('./validator_check').invalid;
 
