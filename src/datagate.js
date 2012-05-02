@@ -1,10 +1,4 @@
 (function () {
-    if (typeof require !== 'function') {
-        require = function () {
-            throw Error();
-        };
-    }
-
     var root = this;
     var _ = root._ || require('underscore');
     var async = root.async || require('async');
@@ -16,6 +10,7 @@
         root.datagate = datagate;
     }
 
+    datagate.__DATAGATE__ = true;
 
     function createNewGate(entries, root_error_message) {
         if (root_error_message === undefined) {
@@ -137,7 +132,7 @@
             error_message = 'Invalid object value.';
         }
 
-        var properties = entries ? Object.keys(entries) : [];
+        var properties = entries ? _.keys(entries) : [];
 
         return function (object, callback) {
 
@@ -288,7 +283,7 @@
 
 
     function _createObjectPropertiesMessage(errors) {
-        var keys = Object.keys(errors);
+        var keys = _.keys(errors);
         var c = keys.length;
         var message = {};
 

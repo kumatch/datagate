@@ -1,10 +1,4 @@
 (function () {
-    if (typeof require !== 'function') {
-        require = function () {
-            throw Error();
-        };
-    }
-
     var root = this;
     var _ = root._ || require('underscore');
     var async = root.async || require('async');
@@ -16,6 +10,7 @@
         root.datagate = datagate;
     }
 
+    datagate.__DATAGATE__ = true;
 
     function createNewGate(entries, root_error_message) {
         if (root_error_message === undefined) {
@@ -137,7 +132,7 @@
             error_message = 'Invalid object value.';
         }
 
-        var properties = entries ? Object.keys(entries) : [];
+        var properties = entries ? _.keys(entries) : [];
 
         return function (object, callback) {
 
@@ -288,7 +283,7 @@
 
 
     function _createObjectPropertiesMessage(errors) {
-        var keys = Object.keys(errors);
+        var keys = _.keys(errors);
         var c = keys.length;
         var message = {};
 
@@ -327,12 +322,12 @@
     DatagateUnionError.prototype    = new Error();
 
 }).call(this);
-(function () {
+(function (datagate) {
     var root = this;
     var filter = {};
 
     if (typeof module !== 'undefined' && module.exports) {
-        if (Object.keys(module.exports).length) {
+        if (module.exports.__DATAGATE__) {
             module.exports.filter = filter;
         } else {
             module.exports = filter;
@@ -421,7 +416,7 @@
     var validator = {};
 
     if (typeof module !== 'undefined' && module.exports) {
-        if (Object.keys(module.exports).length) {
+        if (module.exports.__DATAGATE__) {
             module.exports.validator = validator;
         } else {
             module.exports = validator;

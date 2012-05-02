@@ -1,9 +1,9 @@
-(function () {
+(function (datagate) {
     var root = this;
     var filter = {};
 
     if (typeof module !== 'undefined' && module.exports) {
-        if (Object.keys(module.exports).length) {
+        if (module.exports.__DATAGATE__) {
             module.exports.filter = filter;
         } else {
             module.exports = filter;

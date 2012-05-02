@@ -4,7 +4,7 @@
     var validator = {};
 
     if (typeof module !== 'undefined' && module.exports) {
-        if (Object.keys(module.exports).length) {
+        if (module.exports.__DATAGATE__) {
             module.exports.validator = validator;
         } else {
             module.exports = validator;
