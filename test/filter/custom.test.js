@@ -1,4 +1,4 @@
-var filter = require('../../src/filter');
+var filter = require('../../lib/filter');
 var filterCheck = require('./filter_check');
 
 describe('custom filter (to true if over 10, and false else)', function() {

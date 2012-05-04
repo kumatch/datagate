@@ -1,22 +1,17 @@
 module.exports = function(grunt) {
 
     var sources = [
-        'src/datagate.js',
-        'src/filter.js',
-        'src/validator.js'
+        './dist/datagate.js'
     ];
 
-    var tasks = 'lint concat min';
+    var tasks = 'lint min';
 
     grunt.initConfig({
         lint: {
             files : sources
         },
-        concat:  {
-            'datagate.js' : sources
-        },
         min: {
-            'datagate.min.js': [ 'datagate.js' ]
+            'datagate.min.js': sources
         }
     });
 
