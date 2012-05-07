@@ -12,12 +12,13 @@
     "test": "./test/testrunner"
   },
   "dependencies": {
-    "underscore": "*",
-    "async": "*"
+    "underscore": "*"
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "grunt": "*",
+    "browserbuild": "*"
   },
   "optionalDependencies": {},
   "engines": {
