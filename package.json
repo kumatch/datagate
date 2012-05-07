@@ -2,7 +2,7 @@
   "author": "Yosuke Kumakura <kumatch@gmail.com>",
   "name": "datagate",
   "description": "A data normalize/validation filter for JavaScript.",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "main": "./lib/datagate",
   "repository": {
     "type": "git",
