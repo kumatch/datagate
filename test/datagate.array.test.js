@@ -358,7 +358,7 @@ function DatagateArrayMessageInvalidTest(gate, message) {
         var result_message;
 
         if (typeof message === 'function') {
-            result_message = message(value[0], value[0]);
+            result_message = message(value, value);
         } else {
             result_message = message;
         }
@@ -368,9 +368,8 @@ function DatagateArrayMessageInvalidTest(gate, message) {
             output[0].should.equal(value[0]);
             output[1].should.equal(value[1]);
 
-            err.should.throw;
             err.name.should.equal('DatagateArrayError');
-            err.message.should.equal(message);
+            err.message.should.equal(result_message);
 
             err.origin.length.should.equal(2);
             err.origin[0].should.equal(value[0]);
