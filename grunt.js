@@ -1,19 +1,34 @@
 module.exports = function(grunt) {
 
     var sources = [
-        './dist/datagate.js'
+        './lib/plow.js',
+        './lib/error.js',
+        './lib/filter.js',
+        './lib/validator.js',
+        './lib/array.js',
+        './lib/object.js',
+        './lib/union.js',
+        './lib/datagate.js'
     ];
-
-    var tasks = 'lint min';
 
     grunt.initConfig({
         lint: {
             files : sources
         },
+        concat: {
+            dist: {
+                src: sources,
+                dest: './datagate.min.js'
+            }
+        },
+
         min: {
-            'datagate.min.js': sources
+            dist: {
+                src: sources,
+                dest: './datagate.min.js'
+            }
         }
     });
 
-    grunt.registerTask('default', tasks);
+    grunt.registerTask('default', "lint min");
 };
