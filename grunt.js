@@ -15,17 +15,11 @@ module.exports = function(grunt) {
         lint: {
             files : sources
         },
-        concat: {
-            dist: {
-                src: sources,
-                dest: './datagate.min.js'
-            }
-        },
 
         min: {
             dist: {
                 src: sources,
-                dest: './datagate.min.js'
+                dest: './minify/datagate.min.js'
             }
         }
     });
