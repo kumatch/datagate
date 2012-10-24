@@ -16,13 +16,20 @@ module.exports = function(grunt) {
             files : sources
         },
 
-        min: {
+        concat: {
             dist: {
                 src: sources,
+                dest: './lib/datagate.all.js'
+            }
+        },
+
+        min: {
+            dist: {
+                src: './lib/datagate.all.js',
                 dest: './minify/datagate.min.js'
             }
         }
     });
 
-    grunt.registerTask('default', "lint min");
+    grunt.registerTask('default', "lint concat min");
 };

@@ -11,6 +11,12 @@
   "dependencies": {
     "underscore": "*"
   },
+  "jam": {
+    "dependencies": {
+      "underscore": "*"
+    },
+    "main": "./lib/datagate.all.js"
+  },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
