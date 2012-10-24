@@ -8,20 +8,19 @@
     "type": "git",
     "url": "git://github.com/kumatch/datagate.git"
   },
-  "scripts": {
-    "test": "./test/testrunner"
-  },
   "dependencies": {
     "underscore": "*"
   },
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "grunt": "*",
-    "browserbuild": "*"
+    "grunt": "*"
   },
   "optionalDependencies": {},
   "engines": {
-    "node": "*"
+    "node": ">= 0.6.0"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
